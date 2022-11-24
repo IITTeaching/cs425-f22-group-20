@@ -15,14 +15,14 @@ CREATE TABLE Employee (
   address TEXT NOT NULL,
   salary DECIMAL(20,4),
   emp_role EMP_ROLES NOT NULL,
-  branch UUID REFERENCES Branch(branchID)
+  branch UUID REFERENCES Branch(branchID) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE Customer (
   ssn TEXT NOT NULL PRIMARY KEY UNIQUE,
   name TEXT NOT NULL,
   address TEXT NOT NULL,
-  branch UUID REFERENCES Branch(branchID)
+  branch UUID REFERENCES Branch(branchID) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TYPE ACCESS_TYPE AS ENUM ('checking', 'savings');
@@ -39,8 +39,8 @@ CREATE TABLE Account (
 );
 
 CREATE TABLE Holds (
-    ssn TEXT REFERENCES Customer,
-    accountNumber UUID REFERENCES Account,
+    ssn TEXT REFERENCES Customer ON UPDATE CASCADE ON DELETE CASCADE,
+    accountNumber UUID REFERENCES Account ON UPDATE CASCADE ON DELETE CASCADE,
     PRIMARY KEY (ssn, accountNumber)
 );
 
@@ -53,7 +53,7 @@ CREATE TABLE Transaction (
   transactionDate DATE NOT NULL,
   description TEXT,
   accountFrom UUID NOT NULL UNIQUE,
-  FOREIGN KEY (accountFrom) REFERENCES Account,
+  FOREIGN KEY (accountFrom) REFERENCES Account ON UPDATE CASCADE ON DELETE NO ACTION,
   accountTo UUID NOT NULL UNIQUE,
-  FOREIGN KEY (accountTo) REFERENCES Account
+  FOREIGN KEY (accountTo) REFERENCES Account ON UPDATE CASCADE ON DELETE NO ACTION
 );
