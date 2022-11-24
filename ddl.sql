@@ -18,6 +18,15 @@ CREATE TABLE Employee (
   branch UUID REFERENCES Branch(branchID)
 );
 
+CREATE TABLE Customer (
+  customerID UUID DEFAULT (gen_random_uuid()) NOT NULL UNIQUE,
+  ssn TEXT NOT NULL,
+  name TEXT NOT NULL,
+  address TEXT NOT NULL,
+  branch UUID REFERENCES Branch(branchID),
+  PRIMARY KEY(ssn, customerID)
+);
+
 CREATE TYPE ACCESS_TYPE AS ENUM ('checking', 'savings');
 CREATE TYPE OVERDRAFT_TYPE AS ENUM ('regular', 'reject', 'charge');
 
@@ -28,14 +37,8 @@ CREATE TABLE Account (
   overdraftType OVERDRAFT_TYPE DEFAULT 'regular',
   hasMonthlyFee BOOLEAN DEFAULT false,
   interestRate DECIMAL(20,4) DEFAULT (0),
-  CONSTRAINT CHK_balance CHECK (balance > 0 OR NOT overdraftType = 'reject') 
-);
-
-CREATE TABLE Customer (
-  customerID UUID DEFAULT (gen_random_uuid()) NOT NULL PRIMARY KEY UNIQUE,
-  emp_name TEXT NOT NULL,
-  address TEXT NOT NULL,
-  branch UUID REFERENCES Branch(branchID)
+  CONSTRAINT CHK_balance CHECK (balance > 0 OR NOT overdraftType = 'reject'),
+  ssn TEXT REFERENCES Customer(ssn)
 );
 
 CREATE TABLE Holds (
