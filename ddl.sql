@@ -40,7 +40,8 @@ CREATE TABLE Customer (
 
 CREATE TABLE Holds (
     customerID UUID REFERENCES Customer,
-    accountNumber UUID REFERENCES Account
+    accountNumber UUID REFERENCES Account,
+    PRIMARY KEY (customerID, accountNumber)
 );
 
 CREATE TYPE TRANSACTION_TYPE AS ENUM ('deposit', 'withdrawal', 'transfer', 'external transfer');
