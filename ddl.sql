@@ -36,13 +36,13 @@ CREATE TABLE Account (
   hasMonthlyFee BOOLEAN DEFAULT false,
   interestRate DECIMAL(20,4) DEFAULT (0),
   CONSTRAINT CHK_balance CHECK (balance > 0 OR NOT overdraftType = 'reject'),
-  ssn TEXT REFERENCES Customer(ssn)
+  ssn TEXT REFERENCES Customer
 );
 
 CREATE TABLE Holds (
-    customerID UUID REFERENCES Customer,
+    ssn TEXT REFERENCES Customer,
     accountNumber UUID REFERENCES Account,
-    PRIMARY KEY (customerID, accountNumber)
+    PRIMARY KEY (ssn, accountNumber)
 );
 
 CREATE TYPE TRANSACTION_TYPE AS ENUM ('deposit', 'withdrawal', 'transfer', 'external transfer');
