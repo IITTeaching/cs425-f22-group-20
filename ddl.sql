@@ -19,12 +19,10 @@ CREATE TABLE Employee (
 );
 
 CREATE TABLE Customer (
-  customerID UUID DEFAULT (gen_random_uuid()) NOT NULL UNIQUE,
-  ssn TEXT NOT NULL,
+  ssn TEXT NOT NULL PRIMARY KEY UNIQUE,
   name TEXT NOT NULL,
   address TEXT NOT NULL,
-  branch UUID REFERENCES Branch(branchID),
-  PRIMARY KEY(ssn, customerID)
+  branch UUID REFERENCES Branch(branchID)
 );
 
 CREATE TYPE ACCESS_TYPE AS ENUM ('checking', 'savings');
