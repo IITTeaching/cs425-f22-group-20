@@ -35,8 +35,7 @@ CREATE TABLE Account (
   overdraftType OVERDRAFT_TYPE DEFAULT 'regular',
   hasMonthlyFee BOOLEAN DEFAULT false,
   interestRate DECIMAL(20,4) DEFAULT (0),
-  CONSTRAINT CHK_balance CHECK (balance > 0 OR NOT overdraftType = 'reject'),
-  ssn TEXT REFERENCES Customer
+  CONSTRAINT CHK_balance CHECK (balance > 0 OR NOT overdraftType = 'reject')
 );
 
 CREATE TABLE Holds (
