@@ -23,11 +23,11 @@ CREATE TYPE OVERDRAFT_TYPE AS ENUM ('regular', 'reject', 'charge');
 
 CREATE TABLE Account (
   accountNumber UUID DEFAULT (gen_random_uuid()) NOT NULL PRIMARY KEY UNIQUE,
-  balance DECIMAL(20,4),
-  accessType ACCESS_TYPE,
-  overdraftType OVERDRAFT_TYPE,
-  hasMonthlyFee BOOLEAN,
-  interestRate DECIMAL(20,4),
+  balance DECIMAL(20,4) DEFAULT (0),
+  accessType ACCESS_TYPE DEFAULT 'checking',
+  overdraftType OVERDRAFT_TYPE DEFAULT 'regular',
+  hasMonthlyFee BOOLEAN DEFAULT false,
+  interestRate DECIMAL(20,4) DEFAULT (0),
   CONSTRAINT CHK_balance CHECK (balance > 0 OR NOT overdraftType = 'reject') 
 );
 
