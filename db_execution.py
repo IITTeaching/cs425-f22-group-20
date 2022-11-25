@@ -42,7 +42,7 @@ class DBExecuter:
             raise ValueError("This query doesn't return a table, "
                              "so it can't be converted to a dataframe. \n"
                              "Only call query_to_df() with a `SELECT` statement, \n"
-                             "or an `INSERT INTO table(column(s)...) VALUES (value(s)...) RETURNING (column(s)...)` \n"
+                             "or a statement with a `RETURNING` clause \n"
                              "statement. \n"
                              "Call run_query() to just update the database.") from e
             
