@@ -48,12 +48,14 @@ CREATE TYPE TRANSACTION_TYPE AS ENUM ('deposit', 'withdrawal', 'transfer', 'exte
 
 CREATE TABLE Transaction (
   transactionID UUID DEFAULT (gen_random_uuid()) NOT NULL PRIMARY KEY UNIQUE,
-  transactionType TRANSACTION_TYPE,
+  transactionType TRANSACTION_TYPE NOT NULL,
   amount DECIMAL(20,4) NOT NULL,
   transactionDate DATE NOT NULL,
-  description TEXT,
-  accountFrom UUID,
+  description TEXT DEFAULT NULL,
+  accountFrom UUID DEFAULT NULL,
+  accountFromStartAmount DECIMAL(20,4) DEFAULT NULL,
   FOREIGN KEY (accountFrom) REFERENCES Account ON UPDATE CASCADE ON DELETE NO ACTION,
   accountTo UUID NOT NULL,
+  accountToStartAmount DECIMAL(20,4) NOT NULL,
   FOREIGN KEY (accountTo) REFERENCES Account ON UPDATE CASCADE ON DELETE NO ACTION
 );
