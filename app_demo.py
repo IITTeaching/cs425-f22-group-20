@@ -2,50 +2,63 @@
 from decimal import Decimal
 import sqlalchemy as db # type: ignore
 
-import db_execution
+from db_execution import DBExecuter
 from pretty_printing import pprint_df, pprint_relation
+
+
+"""changed db.create_engine() to include future=True"""
+
 
 # DATABASE CONNECTION STUFF
 
 engine = db.create_engine(
-    'postgresql+psycopg2://postgres:PASSWORDHERE@localhost:5432/Banking'
+    'postgresql+psycopg2://postgres:PASSWORDHERE@localhost:5432/Banking',
+    future=True
 )
 
-connection = engine.connect()
 metadata = db.MetaData()
 
-# make a database executer
-dbexe = db_execution.DBExecuter(metadata, engine, connection)
  
-
-
-
-
-
+ 
+ 
 # QUERY STUFF
 
-# print relation
-pprint_relation(dbexe, "Branch")
+with engine.connect() as atomic_connection:
+    
+    # make a database executer for this atomic block of SQL queries
+    dbexe = DBExecuter(atomic_connection)
 
-# print relation
-pprint_relation(dbexe, "Account")
+    # print relation
+    pprint_relation(dbexe, "Branch")
 
-# print relation
-pprint_relation(dbexe, "Customer")
+    # print relation
+    pprint_relation(dbexe, "Account")
 
-
-# turn query into dataframe
-df = dbexe.query_to_df(f"""
-    SELECT address, waiveFeeMin
-    FROM Branch
-""")
-# print dataframe
-pprint_df(df)
+    # print relation
+    pprint_relation(dbexe, "Customer")
 
 
-# # run query that CHANGES DATABASE
-#
-# dbexe.run_query(f"""
-#     INSERT INTO Account (balance, hasMonthlyFee)
-#     VALUES (400.0, True)
-# """)
+    # turn query into dataframe
+    df = dbexe.query_to_df(f"""
+        SELECT address, waiveFeeMin
+        FROM Branch
+    """)
+    # print dataframe
+    pprint_df(df)
+
+
+with engine.connect() as atomic_connection:
+    
+    # make a database executer for this atomic block of SQL queries
+    dbexe = DBExecuter(atomic_connection)
+    
+    # run query that CHANGES DATABASE
+    
+    dbexe.run_query(f"""
+        INSERT INTO Account (balance, hasMonthlyFee)
+        VALUES (400.0, True)
+    """)
+    
+    # commit to end atomic and save changes
+    # without this, changes will be rolled back
+    dbexe.commit()
