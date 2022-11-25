@@ -54,8 +54,7 @@ CREATE TABLE Transaction (
   description TEXT DEFAULT NULL,
   accountFrom UUID DEFAULT NULL,
   accountFromStartAmount DECIMAL(20,4) DEFAULT NULL,
-  FOREIGN KEY (accountFrom) REFERENCES Account(accountNumber) ON UPDATE CASCADE ON DELETE CASCADE,
   accountTo UUID NOT NULL,
   accountToStartAmount DECIMAL(20,4) NOT NULL,
-  FOREIGN KEY (accountTo) REFERENCES Account(accountNumber) ON UPDATE CASCADE ON DELETE CASCADE
+  FOREIGN KEY (accountTo) REFERENCES Account(accountNumber) ON DELETE CASCADE
 );
