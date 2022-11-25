@@ -52,8 +52,8 @@ CREATE TABLE Transaction (
   amount DECIMAL(20,4) NOT NULL,
   transactionDate DATE NOT NULL,
   description TEXT,
-  accountFrom UUID NOT NULL UNIQUE,
+  accountFrom UUID,
   FOREIGN KEY (accountFrom) REFERENCES Account ON UPDATE CASCADE ON DELETE NO ACTION,
-  accountTo UUID NOT NULL UNIQUE,
+  accountTo UUID NOT NULL,
   FOREIGN KEY (accountTo) REFERENCES Account ON UPDATE CASCADE ON DELETE NO ACTION
 );
