@@ -29,6 +29,8 @@ with engine.connect() as atomic_connection:
     with open("reset_all_ddl.sql") as ddl_file:
         dbexe.run_query(ddl_file.read())
         
+    # commit to end atomic and save changes
+    # without this, changes will be rolled back
     dbexe.commit()
  
  
