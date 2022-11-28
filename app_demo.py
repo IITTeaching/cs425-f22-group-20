@@ -28,6 +28,8 @@ with engine.connect() as atomic_connection:
     
     with open("reset_all_ddl.sql") as ddl_file:
         dbexe.run_query(ddl_file.read())
+        
+    dbexe.commit()
  
  
  
