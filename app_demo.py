@@ -5,7 +5,7 @@ import sqlalchemy as db # type: ignore
 from db_execution import DBExecuter
 from pretty_printing import pprint_df, pprint_relation
 
-
+"""added code to reset all SQL tables/data to empty"""
 """changed db.create_engine() to include future=True"""
 
 
@@ -18,6 +18,16 @@ engine = db.create_engine(
 
 metadata = db.MetaData()
 
+ 
+# INIT TABLES TO EMPTY
+    
+with engine.connect() as atomic_connection:
+    
+    # make a database executer for this atomic block of SQL queries
+    dbexe = DBExecuter(atomic_connection)
+    
+    with open("reset_all_ddl.sql") as ddl_file:
+        dbexe.run_query(ddl_file.read())
  
  
  
