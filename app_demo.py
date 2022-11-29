@@ -12,7 +12,7 @@ from pretty_printing import pprint_df, pprint_relation
 # DATABASE CONNECTION STUFF
 
 engine = db.create_engine(
-    'postgresql+psycopg2://postgres:PASSWORDHERE@localhost:5432/Banking',
+    'postgresql+psycopg2://postgres:{}@localhost:5432/Banking'.format("password"),
     future=True
 )
 
