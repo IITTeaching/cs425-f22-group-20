@@ -112,7 +112,82 @@ def getUUID(message) -> UUID:
             
     return _uuid
 
+def getInt(message) -> int:
+    """Gets a valid integer from the user."""
+    
+    i: int = 0
+    
+    while (True):
+        user_int = input(message).strip()
+        
+        try:
+            i = int(user_int)
+            break
+        except ValueError:
+            print("\n    incorrect integer entered, try again\n")
+            
+    return i
+
+
+def getChoice(message, options: tuple[str, ...]) -> int:
+    """Gets a choice from the user, given a message and     \n
+    a tuple of string options.                              \n
+    Returns the index of the user's choice from the tuple of options."""
+    
+    c: int = 0
+    
+    while (True):
+        user_choice = input(message).strip().lower()
+        
+        try:
+            c = tuple(choice.lower() for choice in options).index(user_choice)
+            break
+        except ValueError:
+            print("\n    incorrect choice entered, try again\n")
+            
+    return c
+
+
+def getMultipleChoice(
+    message: str, 
+    options: tuple[str, ...], 
+    responses: tuple[str, ...]
+) -> int:
+    """Get a choice from the user, given a message,     \n
+    a tuple of string options, and                      \n
+    a tuple of responses to print after they choose.    \n
+    Prints a very pretty prompt for the user to see their options.
+    Returns the index of the user's choice from the tuple of options."""
+    
+    # this is really messy code, but I was having fun
+    
+    letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    
+    prompt = (
+        message + "\n" +
+        "".join(f"    {letter}: {choice}\n" 
+         for (letter, choice) in zip(letters, options)) + "\n" +
+        "       : "
+    )
+    
+    user_choice: int = getChoice(prompt, tuple(iter(letters[:len(options)])))
+    
+    print(responses[user_choice])
+    
+    return user_choice
+
+
+
+
 
 # print(datetime.date.isoformat(getDate("hi: ")))
 # print (getDecimal("hi: "))
 # print (getUUID("hi: "))
+
+
+# index = getMultipleChoice(
+#     "hello?",
+#     ("get", "ready", "go", "set", "up"),
+#     ("yay", "neigh", "hohoho", "SHEESH", "cool")
+# )
+# print("index: " + str(index))
