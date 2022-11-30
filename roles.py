@@ -2,17 +2,6 @@
 import enum
 from enum import Enum
 
-from user_input import (
-    getMultipleChoice,
-    getChoice,
-    getDate,
-    getDecimal,
-    getInt,
-    getUUID,
-    getYearMonth
-)
-
-
 class Role(Enum):
     Customer = enum.auto()
     Manager = enum.auto()
