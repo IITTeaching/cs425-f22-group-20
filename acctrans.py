@@ -40,6 +40,7 @@ with engine.connect() as atomic_connection: # TRANSFER QUERY
     currentBalFrom = dbexe.query_to_value(f"""SELECT balance FROM account WHERE accountnumber = '{uuidFrom}'""")    
     currentBalTo = dbexe.query_to_value(f"""SELECT balance FROM account WHERE accountnumber = '{uuidTo}'""")
     newBalFrom = currentBalFrom - amountToTransfer
+    newBalTo = currentBalTo + amountToTransfer
     overdraftType = dbexe.query_to_value(f"""SELECT overdrafttype FROM account WHERE accountnumber = '{uuidFrom}' """)
     transferType = ''
     if newBalFrom < 0 and overdraftType == 'reject':
@@ -52,14 +53,14 @@ with engine.connect() as atomic_connection: # TRANSFER QUERY
         else:
             transferType = 'external transfer'
 
-        newBalTo = currentBalTo + amountToTransfer
+        
         dbexe.run_query(f"""UPDATE account SET balance = '{newBalFrom}' WHERE accountnumber = '{uuidFrom}'""")
         dbexe.run_query(f"""UPDATE account SET balance = '{newBalTo}' WHERE accountnumber = '{uuidTo}' """)
         dbexe.run_query(f"""INSERT INTO transaction
         (transactiontype, amount, transactiondate, description, accountfrom, accountto, startbalance)
-        VALUES('{transferType}', '-{amountToTransfer}', '{currentDate}', '{descInput}', '{uuidFrom}', '{uuidTo}', '{currentBalTo}')""")
+        VALUES('{transferType}', '{amountToTransfer}', '{currentDate}', '{descInput}', '{uuidFrom}', '{uuidTo}', '{newBalTo}')""")
         dbexe.run_query(f"""INSERT INTO transaction
         (transactiontype, amount, transactiondate, description, accountfrom, accountto, startbalance)
-        VALUES('{transferType}', '{amountToTransfer}', '{currentDate}', '{descInput}', '{uuidTo}', '{uuidFrom}', '{currentBalTo}')""")
+        VALUES('{transferType}', '-{amountToTransfer}', '{currentDate}', '{descInput}', '{uuidTo}', '{uuidFrom}', '{newBalFrom}')""")
         dbexe.commit()
     
