@@ -37,9 +37,20 @@ with engine.connect() as atomic_connection: # TRANSFER QUERY
     stmtYear = stmtTime[0]
     stmtMonth = stmtTime[1]
     monthString = cal.month_name[stmtMonth]
-    transactions = dbexe.query_to_df(f"""SELECT * FROM transaction WHERE accountto = '{userUUID}'
-    AND date_part('year', transactiondate) = '{stmtYear}' AND date_part('month', transactiondate) = '{stmtMonth}' ORDER BY transactiondate """)
-    currentValue = dbexe.query_to_value(f"""SELECT startbalance FROM transaction WHERE accountto = '{userUUID}' ORDER BY transactiondate DESC LIMIT 1""")
+    transactions = dbexe.query_to_df(f"""
+        SELECT * 
+        FROM transaction 
+        WHERE accountto = '{userUUID}' AND 
+            date_part('year', transactiondate) = '{stmtYear}' AND 
+            date_part('month', transactiondate) = '{stmtMonth}' 
+        ORDER BY transactiondate 
+    """)
+    currentValue = dbexe.query_to_value(f"""
+        SELECT startbalance 
+        FROM transaction 
+        WHERE accountto = '{userUUID}' 
+        ORDER BY transactiondate DESC LIMIT 1
+    """)
     if stmtYear == date.today().year and stmtMonth == date.today().month:
         pprint_df(transactions)
         print('Full Statement is not available until the month ends')
