@@ -37,30 +37,68 @@ with engine.connect() as atomic_connection: # TRANSFER QUERY
     amountToTransfer = uin.getDecimal('Enter how much you want to transfer: ')
     currentDate = date.today()
     descInput = input("Enter A description for the Transaction: ")
-    currentBalFrom = dbexe.query_to_value(f"""SELECT balance FROM account WHERE accountnumber = '{uuidFrom}'""")    
-    currentBalTo = dbexe.query_to_value(f"""SELECT balance FROM account WHERE accountnumber = '{uuidTo}'""")
+    currentBalFrom = dbexe.query_to_value(f"""
+        SELECT balance 
+        FROM account 
+        WHERE accountnumber = '{uuidFrom}'
+    """)    
+    currentBalTo = dbexe.query_to_value(f"""
+        SELECT balance 
+        FROM account 
+        WHERE accountnumber = '{uuidTo}'
+    """)
     newBalFrom = currentBalFrom - amountToTransfer
     newBalTo = currentBalTo + amountToTransfer
-    overdraftType = dbexe.query_to_value(f"""SELECT overdrafttype FROM account WHERE accountnumber = '{uuidFrom}' """)
+    overdraftType = dbexe.query_to_value(f"""
+        SELECT overdrafttype 
+        FROM account 
+        WHERE accountnumber = '{uuidFrom}' 
+    """)
     transferType = ''
     if newBalFrom < 0 and overdraftType == 'reject':
         print('Insufficient funds')
     else:
-        fromBranch = dbexe.query_to_value(f"""SELECT branch FROM customer JOIN holds on customer.ssn = holds.ssn WHERE accountnumber = '{uuidFrom}' """)
-        toBranch = dbexe.query_to_value(f"""SELECT branch FROM customer JOIN holds on customer.ssn = holds.ssn WHERE accountnumber = '{uuidTo}' """)
+        
+        # SELECT DISTINCT here
+        
+        fromBranch = dbexe.query_to_value(f"""
+            SELECT branch 
+            FROM customer JOIN holds on customer.ssn = holds.ssn 
+            WHERE accountnumber = '{uuidFrom}' 
+        """)
+        toBranch = dbexe.query_to_value(f"""
+            SELECT branch 
+            FROM customer JOIN holds on customer.ssn = holds.ssn 
+            WHERE accountnumber = '{uuidTo}' 
+        """)
         if fromBranch == toBranch:
             transferType = 'transfer'
         else:
             transferType = 'external transfer'
 
         
-        dbexe.run_query(f"""UPDATE account SET balance = '{newBalFrom}' WHERE accountnumber = '{uuidFrom}'""")
-        dbexe.run_query(f"""UPDATE account SET balance = '{newBalTo}' WHERE accountnumber = '{uuidTo}' """)
-        dbexe.run_query(f"""INSERT INTO transaction
-        (transactiontype, amount, transactiondate, description, accountfrom, accountto, startbalance)
-        VALUES('{transferType}', '{amountToTransfer}', '{currentDate}', '{descInput}', '{uuidFrom}', '{uuidTo}', '{newBalTo}')""")
-        dbexe.run_query(f"""INSERT INTO transaction
-        (transactiontype, amount, transactiondate, description, accountfrom, accountto, startbalance)
-        VALUES('{transferType}', '-{amountToTransfer}', '{currentDate}', '{descInput}', '{uuidTo}', '{uuidFrom}', '{newBalFrom}')""")
+        dbexe.run_query(f"""
+            UPDATE account 
+            SET balance = '{newBalFrom}'
+            WHERE accountnumber = '{uuidFrom}'
+        """)
+        dbexe.run_query(f"""
+            UPDATE account
+            SET balance = '{newBalTo}' 
+            WHERE accountnumber = '{uuidTo}' 
+        """)
+        dbexe.run_query(f"""
+            INSERT INTO transaction (transactiontype, amount, transactiondate, 
+                description, accountfrom, accountto, startbalance)
+            VALUES('{transferType}', '{amountToTransfer}', '{currentDate}', 
+                '{descInput}', '{uuidFrom}', '{uuidTo}', '{newBalTo}')
+        """)
+        dbexe.run_query(f"""
+            INSERT INTO transaction (transactiontype, amount, transactiondate, 
+                description, accountfrom, accountto, startbalance)
+            VALUES('{transferType}', '-{amountToTransfer}', '{currentDate}', 
+                '{descInput}', '{uuidTo}', '{uuidFrom}', '{newBalFrom}')
+        """)
+        
         dbexe.commit()
     
