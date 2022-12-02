@@ -2,6 +2,9 @@ import datetime
 import decimal
 from decimal import Decimal
 from uuid import UUID
+import enum
+from enum import Enum
+from typing import Union
 
 # set precision of decimal values
 decimal.getcontext().prec = 4
@@ -150,13 +153,11 @@ def getChoice(message, options: tuple[str, ...]) -> int:
 
 def getMultipleChoice(
     message: str, 
-    options: tuple[str, ...], 
-    responses: tuple[str, ...]
+    option_names: tuple[str, ...]
 ) -> int:
     """Get a choice from the user, given a message,     \n
-    a tuple of string options, and                      \n
-    a tuple of responses to print after they choose.    \n
-    Prints a very pretty prompt for the user to see their options.
+    and a tuple of option names                         \n
+    Prints a very pretty prompt for the user to see their options. \n
     Returns the index of the user's choice from the tuple of options."""
     
     # this is really messy code, but I was having fun
@@ -165,18 +166,86 @@ def getMultipleChoice(
     
     prompt = (
         message + "\n" +
-        "".join(f"    {letter}: {choice}\n" 
-         for (letter, choice) in zip(letters, options)) + "\n" +
+        "".join(f"    {letter}: {option_name}\n" 
+         for (letter, option_name) in zip(letters, option_names)) + "\n" +
         "       : "
     )
     
-    user_choice: int = getChoice(prompt, tuple(iter(letters[:len(options)])))
-    
-    print(responses[user_choice])
+    user_choice: int = getChoice(prompt, tuple(iter(letters[:len(option_names)])))
     
     return user_choice
 
 
+
+class Menu:
+    
+    message: str
+    options: tuple[tuple[str, Union["function", "Menu.Action", "Menu"]], ...]
+    run_only_once: bool
+    
+    class Action(Enum):
+        EXIT = enum.auto()
+    
+    def __init__(
+        self, 
+        message: str, 
+        options: tuple[tuple[str, Union["function", "Menu.Action", "Menu"]], ...],
+        run_only_once: bool = False
+    ) -> None:
+        self.message = message
+        self.options = options
+        self.run_only_once = run_only_once
+        pass
+    
+    
+    def run(self) -> int:
+        """Run menu loop, if (run_only_once), then loop ends after 1 round.
+        Returns the last user choice index upon ending."""
+        
+        
+        running = True
+        
+        user_choice: int = -1
+        
+        while (running):
+            
+            user_choice = getMultipleChoice(
+                self.message,
+                self.get_option_names()
+            )
+            
+            action = self.options[user_choice][1]
+            
+            if (callable(action)):
+                action()
+            elif (type(action) == Menu):
+                action.run()
+            elif (action == Menu.Action.EXIT):
+                running = False
+                
+            if (self.run_only_once):
+                running = False
+                
+        return user_choice
+    
+    
+    def remove_options(self, *rm_option_names: str) -> None:
+        
+        names = self.get_option_names()
+        if (all((n in names) for n in rm_option_names)):
+            self.options = tuple(
+                option 
+                for option in self.options
+                if option[0] not in rm_option_names
+            )
+        else:
+            raise ValueError("Some of the given option names to remove are not options in this menu.")
+    
+    def get_option_names(self) -> tuple[str, ...]:
+        return tuple(o[0] for o in self.options)
+    
+    def get_option_index(self, option_name: str) -> int:
+        return self.get_option_names().index(option_name)
 
 
 
@@ -187,7 +256,14 @@ def getMultipleChoice(
 
 # index = getMultipleChoice(
 #     "hello?",
-#     ("get", "ready", "go", "set", "up"),
-#     ("yay", "neigh", "hohoho", "SHEESH", "cool")
+#     (
+#         ("get", "ready!"),
+#         ("set", "go!"),
+#         ("yay", "neigh!"),
+#         ("go", "hohoho!")
+#     )
 # )
 # print("index: " + str(index))
+
+# index2 = getChoice("question: ", ("yes", "no"))
+# print("index: " + str(index2))
