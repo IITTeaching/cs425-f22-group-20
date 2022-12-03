@@ -2,7 +2,7 @@ import config as config
 from decimal import Decimal
 import sqlalchemy as db # type: ignore
 
-from helpers.postgres.db_execution import DBExecuter
+from db_execution import DBExecuter
 from pretty_printing import pprint_df, pprint_relation
 
 """added code to reset all SQL tables/data to empty"""

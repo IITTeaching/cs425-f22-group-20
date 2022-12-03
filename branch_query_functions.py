@@ -1,6 +1,6 @@
 
 import pandas as pd # type: ignore 
-from helpers.postgres.db_execution import DBExecuter
+from db_execution import DBExecuter
 
 def all_branches(engine) -> pd.DataFrame:
     """Get branches dataframe."""

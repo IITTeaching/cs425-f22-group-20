@@ -4,7 +4,7 @@ import sqlalchemy as db # type: ignore
 import pandas as pd # type: ignore 
 import numpy as np # type: ignore
 
-from helpers.postgres.db_execution import DBExecuter
+from db_execution import DBExecuter
 
 from roles import Role
 

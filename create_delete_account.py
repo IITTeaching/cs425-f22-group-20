@@ -3,7 +3,7 @@ import pandas as pd # type: ignore
 import decimal
 from decimal import Decimal
 from uuid import UUID
-from helpers.postgres.db_execution import DBExecuter
+from db_execution import DBExecuter
 
 from pretty_printing import pprint_df
 
