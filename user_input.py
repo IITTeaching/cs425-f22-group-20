@@ -40,7 +40,7 @@ def getYearMonth(message) -> tuple[int, int]:
         
     return (year, month)
     
-def getDate(message) -> datetime.date:
+def getDate(message, future = False) -> datetime.date:
     """Gets a valid date from the user."""
     
     year = 0
@@ -58,6 +58,9 @@ def getDate(message) -> datetime.date:
         except ValueError:
             try:
                 year = int(user_year)
+                if (not future and 
+                    year > datetime.date.today().year):
+                    raise ValueError("Invalid future date")
                 break
             except ValueError:
                 print("\n    incorrect year OR iso date format entered, try again\n")
@@ -69,6 +72,9 @@ def getDate(message) -> datetime.date:
             month = int(user_month)
             if (not 0 < month <= 12):
                 raise ValueError("wrong month")
+            if (not future and 
+                datetime.date(year, month, 1) > datetime.date.today()):
+                raise ValueError("Invalid future date")
             break
         except ValueError:
             print("\n    incorrect month entered, try again\n")
@@ -78,12 +84,15 @@ def getDate(message) -> datetime.date:
         
         try:
             day = int(user_day)
+            if (not future and 
+                datetime.date(year, month, day) > datetime.date.today()):
+                raise ValueError("Invalid future date")
             return datetime.date(year, month, day)
             
         except ValueError:
             print("\n    incorrect day entered, try again\n")
          
-def getDecimal(message) -> Decimal:
+def getDecimal(message, min = None, inclusive = False) -> Decimal:
     """Gets a valid Decimal from the user."""
     
     dec: Decimal = Decimal()
@@ -93,9 +102,16 @@ def getDecimal(message) -> Decimal:
         
         try:
             dec = Decimal(user_dec)
+            if (min != None and 
+                ((inclusive and dec < min) or
+                 (not inclusive and dec <= min))):
+                raise ValueError("Does not exceed minimum")
             break
         except ValueError:
-            print("\n    incorrect decimal entered, try again\n")
+            print(f"\n    incorrect integer entered, " +
+                  (("must be >" + ("=" if (inclusive) else "") + f" {min}, ") 
+                        if (min != None) else "") +
+                  f"try again\n")
             
     return dec
 
@@ -115,7 +131,7 @@ def getUUID(message) -> UUID:
             
     return _uuid
 
-def getInt(message) -> int:
+def getInt(message, min = None, inclusive = False) -> int:
     """Gets a valid integer from the user."""
     
     i: int = 0
@@ -125,11 +141,56 @@ def getInt(message) -> int:
         
         try:
             i = int(user_int)
+            if (min != None and 
+                ((inclusive and i < min) or
+                 (not inclusive and i <= min))):
+                raise ValueError("Does not exceed minimum")
             break
         except ValueError:
-            print("\n    incorrect integer entered, try again\n")
+            print(f"\n    incorrect integer entered, " +
+                  (("must be >" + ("=" if (inclusive) else "") + f" {min}, ") 
+                        if (min != None) else "") +
+                  f"try again\n")
             
     return i
+
+
+def getText(message) -> str:
+    """Gets long text from the user."""
+    
+    satisfied = False
+    
+    while (not satisfied):
+    
+        txt = ""
+        
+        print(message, "\n")
+        
+        print("    End with a '\\' to finish: \n")
+        
+        while (len(txt) == 0 or txt[-2] != "\\"):
+            txt += input("    ").rstrip() + "\n"
+            
+        
+        txt = txt[:-2]
+        
+        print("\nAre you satisfied with your text?\n")
+        print(
+            "\n".join(
+                ("    " if (i != 0) else "   '") + line 
+                for i, line in enumerate(txt.split("\n"))
+            ) + "'\n"
+        )
+
+        satisfied = getYorN("...")
+        
+    return txt
+    
+
+def getYorN(message) -> bool:
+    
+    return getChoice(f"{message} (Y/N): ",  ("Y", "N")) == 0
+    
 
 
 def getChoice(message, options: tuple[str, ...]) -> int:
@@ -249,7 +310,7 @@ class Menu:
 
 
 
-# print(datetime.date.isoformat(getDate("hi: ")))
+# print(datetime.date.isoformat(getDate("date: ")))
 # print (getDecimal("hi: "))
 # print (getUUID("hi: "))
 
@@ -267,3 +328,7 @@ class Menu:
 
 # index2 = getChoice("question: ", ("yes", "no"))
 # print("index: " + str(index2))
+
+# getInt("int: ", 0, True)
+
+print(getText("\nwrite something"))
