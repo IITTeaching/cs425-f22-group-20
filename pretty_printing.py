@@ -1,7 +1,7 @@
 
 import numpy as np # type: ignore 
 import pandas as pd # type: ignore
-from db_execution import DBExecuter
+from helpers.postgres.db_execution import DBExecuter
 
 def pprint_df(df: pd.DataFrame):
     """Pretty prints a pandas DataFrame"""

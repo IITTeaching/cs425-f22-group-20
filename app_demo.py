@@ -1,18 +1,17 @@
-
+import config as config
 from decimal import Decimal
 import sqlalchemy as db # type: ignore
 
-from db_execution import DBExecuter
+from helpers.postgres.db_execution import DBExecuter
 from pretty_printing import pprint_df, pprint_relation
 
 """added code to reset all SQL tables/data to empty"""
 """changed db.create_engine() to include future=True"""
 
-
 # DATABASE CONNECTION STUFF
 
 engine = db.create_engine(
-    'postgresql+psycopg2://postgres:{}@localhost:5432/Banking'.format("password"),
+    'postgresql+psycopg2://{}:{}@localhost:5432/{}'.format(config.database_username, config.database_password, config.database_name),
     future=True
 )
 

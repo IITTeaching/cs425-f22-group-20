@@ -4,7 +4,7 @@ import sqlalchemy as db # type: ignore
 import pandas as pd # type: ignore 
 import numpy as np # type: ignore
 
-from db_execution import DBExecuter
+from helpers.postgres.db_execution import DBExecuter
 
 from roles import Role
 
@@ -36,7 +36,7 @@ from user_app_functions import (
 )
 
 from deposit import make_deposit
-from create_delete_account import create_account, delete_account
+from helpers.create_insert_delete.create_delete_account import create_account, delete_account
 
 # DATABASE CONNECTION STUFF
 

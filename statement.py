@@ -1,16 +1,16 @@
 import sqlalchemy as db
 import user_input as uin
-from db_execution import DBExecuter
+from helpers.postgres.db_execution import DBExecuter
 from pretty_printing import pprint_df, pprint_relation
 from datetime import date
 import calendar as cal
-
+import config as config
 
 
 # DATABASE CONNECTION STUFF
 
 engine = db.create_engine(
-    'postgresql+psycopg2://postgres:test@localhost:5432/cs425_final',
+    'postgresql+psycopg2://{}:{}@localhost:5432/{}'.format(config.database_username, config.database_password, config.database_name),
     future=True
 )
 

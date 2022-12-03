@@ -1,21 +1,21 @@
 import sqlalchemy as db
 import user_input as uin
-from db_execution import DBExecuter
+from helpers.postgres.db_execution import DBExecuter
 from pretty_printing import pprint_df, pprint_relation
 from datetime import date
 from uuid import UUID
+import config as config
 
 # DATABASE CONNECTION STUFF
 
 engine = db.create_engine(
-    'postgresql+psycopg2://postgres:test@localhost:5432/cs425_final',
+    'postgresql+psycopg2://{}:{}@localhost:5432/{}'.format(config.database_username, config.database_password, config.database_name),
     future=True
 )
 
 metadata = db.MetaData()
 
 # QUERIES
-
 
 with engine.connect() as atomic_connection: # TRANSFER QUERY
     # make a database executer for this atomic block of SQL queries
@@ -33,7 +33,6 @@ with engine.connect() as atomic_connection: # TRANSFER QUERY
         uuidTo = uin.getUUID('Enter the UUID of the person you would like to transfer the money to: ')
     else:
         print ('Insufficient permissions')
-        #TODO: Make it so it doesn't execute the rest of the code
     amountToTransfer = uin.getDecimal('Enter how much you want to transfer: ')
     currentDate = date.today()
     descInput = input("Enter A description for the Transaction: ")
