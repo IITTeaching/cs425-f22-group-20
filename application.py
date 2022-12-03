@@ -35,7 +35,7 @@ from user_app_functions import (
     create_user
 )
 
-from deposit import make_deposit
+from implementation.deposit import make_deposit
 from helpers.create_insert_delete.create_delete_account import create_account, delete_account
 
 # DATABASE CONNECTION STUFF

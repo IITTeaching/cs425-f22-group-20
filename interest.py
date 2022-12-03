@@ -19,17 +19,16 @@ engine = db.create_engine(
 
 metadata = db.MetaData()
 
-# QUERIES
+create_customer(engine)
 
-#create_branch(engine)
-create_employee(engine)
+# QUERIES
 
 with engine.connect() as atomic_connection: # TRANSFER QUERY
   # make a database executer for this atomic block of SQL queries
   dbexe = DBExecuter(atomic_connection)
 
   # TODO get from current user
-  userRole = 'manager' 
+  userRole = 'manager'
   managerUUID = '123'
   if userRole == 'manager':
     print ('Authenticated')
