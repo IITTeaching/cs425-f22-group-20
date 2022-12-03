@@ -16,7 +16,7 @@ def pprint_df(df: pd.DataFrame):
 
     # df.columns = (crop_long_colname(val) for val in df.columns)
 
-    print("\n", df.apply(crop_long_all), sep="")
+    print("\n", df.apply(crop_long_all).to_string(), sep="")
     
 def pprint_relation(dbexe: DBExecuter, table_name: str):
     """Pretty prints the SELECT * FROM {table_name}"""

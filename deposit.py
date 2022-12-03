@@ -1,13 +1,12 @@
 
 import pandas as pd # type: ignore 
-from roles import Role
-from pretty_printing import pprint_df
-
 import datetime
 import decimal
 from decimal import Decimal
-from db_execution import DBExecuter
 from uuid import UUID
+from db_execution import DBExecuter
+
+from pretty_printing import pprint_df
 
 from user_input import (
     Menu,
@@ -29,11 +28,11 @@ decimal.getcontext().prec = 4
 def simple_access(
     engine, 
     transaction_type: str,
-    accountnumber: str, 
+    accountnumber: UUID, 
     amount: Decimal,
     transaction_date: datetime.date,
     description: str
-) -> str:
+) -> UUID:
     """Adds given amount to given account and 
     creates a matching Transaction.
     Returns the new Transaction's transactionID."""
@@ -52,7 +51,7 @@ def simple_access(
         """)
         
     # new transactionID
-    transactionID: str = ""
+    transactionID = None
         
     # run queries as an atomic unit
     with engine.connect() as atomic_connection:
@@ -85,11 +84,11 @@ def simple_access(
 
 def deposit(
     engine, 
-    accountnumber: str, 
+    accountnumber: UUID, 
     amount: Decimal,
     transaction_date: datetime.date,
     description: str
-) -> str:
+) -> UUID:
     """Deposits given amount from given account and 
     creates a 'deposit' Transaction. 
     Returns the new Transaction's transactionID."""
@@ -137,7 +136,7 @@ def make_deposit(
         print("\nNo accounts found to make a deposit.")
         return
     
-    # let user choose an account
+    # show user the account options
     pprint_df(account_choices)
     
     account_index = getMultipleChoice(
