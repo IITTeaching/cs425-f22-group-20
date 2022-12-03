@@ -13,21 +13,35 @@ def user_is_in_database(
     
     in_database = False
     
-    table = "Employee"
-    
     if (user_role == Role.Customer):
-        table = "Customer"
-    
-    with engine.connect() as atomic_connection:
-    
-        # make a database executer for this atomic block of SQL queries
-        dbexe = DBExecuter(atomic_connection)
+        # search Customer
         
-        in_database = not dbexe.query_to_df(f"""
-            SELECT 1
-            FROM {table}
-            WHERE ssn = '{user_ssn}'
-        """).empty
+        with engine.connect() as atomic_connection:
+    
+            # make a database executer for this atomic block of SQL queries
+            dbexe = DBExecuter(atomic_connection)
+            
+            in_database = not dbexe.query_to_df(f"""
+                SELECT 1
+                FROM Customer
+                WHERE ssn = '{user_ssn}'
+            """).empty
+    else: 
+        # search Employee and check emp_role
+        
+        emp_role = "manager" if (user_role == Role.Manager) else "teller"
+        
+        with engine.connect() as atomic_connection:
+    
+            # make a database executer for this atomic block of SQL queries
+            dbexe = DBExecuter(atomic_connection)
+            
+            in_database = not dbexe.query_to_df(f"""
+                SELECT 1
+                FROM Employee
+                WHERE ssn = '{user_ssn}' AND
+                        emp_role = '{emp_role}'
+            """).empty
     
     return in_database
  
