@@ -331,4 +331,4 @@ class Menu:
 
 # getInt("int: ", 0, True)
 
-print(getText("\nwrite something"))
+# print(getText("\nwrite something"))
