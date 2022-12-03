@@ -15,7 +15,7 @@ from user_input import (
 
 from app_functions import (
     make_withdrawal,
-    make_deposit,
+    # make_deposit,
     make_transfer,
     
     create_account,
@@ -34,6 +34,8 @@ from app_functions import (
 from user_app_functions import (
     create_user
 )
+
+from deposit import make_deposit
 
 
 # DATABASE CONNECTION STUFF
