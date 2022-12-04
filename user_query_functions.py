@@ -147,3 +147,39 @@ def get_employee(
     
     return employee
  
+ 
+# not used yet
+def remove_customer(
+    engine,
+    ssn: str
+):
+    """Deletes customer given SSN."""
+
+    with engine.connect() as atomic_connection:      
+        dbexe = DBExecuter(atomic_connection)
+
+        # delete matching customer
+        dbexe.run_query(f"""
+            DELETE FROM Customer
+            WHERE ssn = '{ssn}'
+        """)
+        
+        dbexe.commit()
+
+
+def remove_employee(
+    engine,
+    ssn: str
+):
+    """Deletes an employee given their SSN."""
+
+    with engine.connect() as atomic_connection:      
+        dbexe = DBExecuter(atomic_connection)
+
+        # delete matching employee
+        dbexe.run_query(f"""
+            DELETE FROM Employee
+            WHERE ssn = '{ssn}'
+        """)
+        
+        dbexe.commit()

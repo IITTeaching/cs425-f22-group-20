@@ -23,7 +23,10 @@ from user_query_functions import (
     insert_custumer,
     insert_employee,
     get_customer,
-    get_employee
+    get_employee,
+    
+    remove_customer,
+    remove_employee
 )
 
 
@@ -59,3 +62,23 @@ def create_user(
         pprint_df(get_employee(engine, ssn))
         
     print("\nNew user created successfully!")
+
+
+
+# not used yet
+def delete_customer(
+    engine
+):
+    ssn = input("\nCustomer's ssn: ").strip()
+    
+    remove_customer(engine, ssn)
+    print("\nCustomer deleted successfully.")
+    
+    
+def delete_employee(
+    engine,
+):
+    ssn = input("\nEmployee's ssn: ").strip()
+    
+    remove_employee(engine, ssn)
+    print("\nEmployee deleted successfully.")
