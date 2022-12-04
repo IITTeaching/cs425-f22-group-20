@@ -22,18 +22,17 @@ def insert_customer(
     name: str,
     address: str,
     branch: UUID,
-):
-    """Inserts a new customer of the given branch."""
-    # run queries as atomic unit
-    with engine.connect() as atomic_connection:
-        dbexe = DBExecuter(atomic_connection)
-        
-        dbexe.run_query(f"""
-            INSERT INTO Customer (ssn, name, address, branch)
-            VALUES ('{ssn}', '{name}', {address}, {branch})
-        """)
-        
-        dbexe.commit()
+) -> UUID:
+  """Creates a new customer of the given branch."""
+  # run queries as atomic unit
+  with engine.connect() as atomic_connection:
+    dbexe = DBExecuter(atomic_connection)
+    dbexe.run_query(f"""
+        INSERT INTO Customer (ssn, name, address, branch)
+        VALUES ('{ssn}', '{name}', '{address}', '{branch}')
+    """)
+    
+    dbexe.commit()
     
 def remove_customer(
     engine,
@@ -72,7 +71,7 @@ def create_customer(
         tuple(b for b in branches["address"])
     )
     branch = branches["branchid"][branch_index]
-
+    
     ssn = getText("What is the Customers SSN? ");
     name = getText("What is the Customers full name? ");
     address = getText("What is the Customers address? ");
