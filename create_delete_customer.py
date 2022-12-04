@@ -66,29 +66,29 @@ def create_customer(
         print("No branches found! Please create one.")
         return
 
-  branch_index = getMultipleChoice(
-    "\nChoose a branch: ", 
-    tuple(b for b in branches["address"])
-  )
+    branch_index = getMultipleChoice(
+      "\nChoose a branch: ", 
+      tuple(b for b in branches["address"])
+    )
 
-  branch = branches["branchid"][branch_index]
+    branch = branches["branchid"][branch_index]
 
-  # let user choose customers from that branch to create account for
-  customer_choices = pd.DataFrame()
+    # let user choose customers from that branch to create account for
+    customer_choices = pd.DataFrame()
+        
+    with engine.connect() as atomic_connection:
+        
+      # make a database executer for this atomic block of SQL queries
+      dbexe = DBExecuter(atomic_connection)
       
-  with engine.connect() as atomic_connection:
-      
-    # make a database executer for this atomic block of SQL queries
-    dbexe = DBExecuter(atomic_connection)
-    
-    ssn = getText("What is the Customers SSN? ");
-    name = getText("What is the Customers full name? ");
-    address = getText("What is the Customers address? ");
+      ssn = getText("What is the Customers SSN? ");
+      name = getText("What is the Customers full name? ");
+      address = getText("What is the Customers address? ");
 
-    pprint_df(dbexe.query_to_value(f"""
-      INSERT INTO Customer (ssn, name, address, branch)
-      VALUES ('{ssn}', '{name}', '{address}', '{branch}')
-    """))
+      pprint_df(dbexe.query_to_value(f"""
+        INSERT INTO Customer (ssn, name, address, branch)
+        VALUES ('{ssn}', '{name}', '{address}', '{branch}')
+      """))
         
 
 def delete_customer(
