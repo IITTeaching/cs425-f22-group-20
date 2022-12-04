@@ -11,7 +11,9 @@ from user_input import (
     getDecimal,
     getInt,
     getUUID,
-    getYearMonth
+    getYearMonth,
+    getText,
+    getYorN
 )
 
 from branch_query_functions import (
@@ -74,7 +76,7 @@ def delete_customer(
     remove_customer(engine, ssn)
     print("\nCustomer deleted successfully.")
     
-    
+# not used yet  
 def delete_employee(
     engine,
 ):
@@ -82,3 +84,70 @@ def delete_employee(
     
     remove_employee(engine, ssn)
     print("\nEmployee deleted successfully.")
+    
+
+
+
+
+# not used yet
+def create_customer(
+    engine
+):
+    print("\n~ Create a customer ~")
+
+    # let user choose a branch to create account for
+    branches: pd.DataFrame = all_branches(engine)
+
+    # show user the branches
+    pprint_df(branches)
+        
+    if (branches.empty):
+        print("No branches found! Please create one.")
+        return
+
+    branch_index = getMultipleChoice(
+        "\nChoose a branch: ", 
+        tuple(b for b in branches["address"])
+    )
+    branch = branches["branchid"][branch_index]
+    
+    ssn = getText("What is the Customers SSN? ");
+    name = getText("What is the Customers full name? ");
+    address = getText("What is the Customers address? ");
+        
+    insert_customer(engine, ssn, name, address, branch)
+  
+
+# not used yet
+def create_employee(
+    engine
+):
+    print("\n~ Create an employee ~")
+
+    # let user choose a branch to create account for
+    branches: pd.DataFrame = all_branches(engine)
+
+    # show user the branches
+    pprint_df(branches)
+        
+    if (branches.empty):
+        print("No branches found! Please create one.")
+        return
+
+    branch_index = getMultipleChoice(
+        "\nChoose a branch: ", 
+        tuple(b for b in branches["address"])
+    )
+
+    branch = branches["branchid"][branch_index]
+
+    # let user choose customers from that branch to create account for
+    customer_choices = pd.DataFrame()
+        
+    ssn = getText("What is the employees SSN? ");
+    emp_name = getText("What is the employees full name? ");
+    address = getText("What is the employees address? ");
+    salary = getDecimal("What is the employees salary? ");
+    emp_role = getText("What is the employees role? (teller, loan specialist, manager) ");
+
+    insert_employee(engine, ssn, address, emp_name, salary, emp_role, branch)
