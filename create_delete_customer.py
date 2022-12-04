@@ -72,9 +72,6 @@ def create_customer(
     )
 
     branch = branches["branchid"][branch_index]
-
-    # let user choose customers from that branch to create account for
-    customer_choices = pd.DataFrame()
         
     with engine.connect() as atomic_connection:
         
