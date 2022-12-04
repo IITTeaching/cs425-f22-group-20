@@ -2,7 +2,6 @@ import sqlalchemy as db
 import pandas as pd
 from create_delete_account import create_account, insert_account
 from create_delete_branch import create_branch
-from create_delete_customer import create_customer
 from create_insert_employee import create_employee
 import user_input as uin
 from db_execution import DBExecuter

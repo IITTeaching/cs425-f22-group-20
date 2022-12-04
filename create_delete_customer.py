@@ -71,23 +71,12 @@ def create_customer(
         tuple(b for b in branches["address"])
     )
     branch = branches["branchid"][branch_index]
-
-<<<<<<< HEAD
+    
     ssn = getText("What is the Customers SSN? ");
     name = getText("What is the Customers full name? ");
     address = getText("What is the Customers address? ");
         
     insert_customer(engine, ssn, name, address, branch)
-=======
-  # let user choose customers from that branch to create account for
-  customer_choices = pd.DataFrame()
-      
-  ssn = getText("What is the Customers SSN? ");
-  name = getText("What is the Customers full name? ");
-  address = getText("What is the Customers address? ");
-
-  insert_customer(engine, ssn, name, address, branch)
->>>>>>> f16e922 (implement overdrafts, interest, and monthly fees)
         
 
 def delete_customer(
