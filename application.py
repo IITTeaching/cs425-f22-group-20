@@ -1,3 +1,5 @@
+import config
+
 from decimal import Decimal
 from uuid import UUID
 import sqlalchemy as db # type: ignore
@@ -18,8 +20,8 @@ from app_functions import (
     # make_deposit,
     make_transfer,
     
-    create_account,
-    delete_account,
+    # create_account,
+    # delete_account,
     view_month_statement,
     view_pending_transactions,
     add_interest,
@@ -41,7 +43,7 @@ from create_delete_account import create_account, delete_account
 # DATABASE CONNECTION STUFF
 
 engine = db.create_engine(
-    'postgresql+psycopg2://postgres:n0w1g3t1t@localhost:5432/Banking',
+    'postgresql+psycopg2://{}:{}@localhost:5432/{}'.format(config.database_username, config.database_password, config.database_name),
     future=True
 )
 
@@ -56,7 +58,7 @@ with engine.connect() as atomic_connection:
     dbexe = DBExecuter(atomic_connection)
     
     
-    with open("final_ddl.sql") as ddl_file:
+    with open("reset_all_ddl.sql") as ddl_file:
         dbexe.run_query(ddl_file.read())
 
     with open("insertion.sql") as insertion_file:
