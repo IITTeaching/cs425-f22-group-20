@@ -24,9 +24,9 @@ from app_functions import (
     # delete_account,
     view_month_statement,
     view_pending_transactions,
-    add_interest,
-    apply_overdraft_fees,
-    apply_monthly_fees,
+    # add_interest,
+    # apply_overdraft_fees,
+    # apply_monthly_fees,
     
     insert_analytics_name_1_here,
     insert_analytics_name_2_here,
@@ -39,6 +39,8 @@ from user_app_functions import (
 
 from deposit import make_deposit
 from create_delete_account import create_account, delete_account
+
+from interes_overdrafts_monthlyfee import apply_interest_rates, apply_overdraft_fees, apply_monthly_fees
 
 # DATABASE CONNECTION STUFF
 
@@ -130,7 +132,7 @@ class BankApp:
                 ("delete account",              self.call(delete_account)),
                 ("view month statement",        self.call(view_month_statement)),
                 ("view pending transactions",   self.call(view_pending_transactions)),
-                ("add interest",                self.call(add_interest)),
+                ("add interest",                self.call(apply_interest_rates)),
                 ("apply overdraft fees",        self.call(apply_overdraft_fees)),
                 ("apply monthly fees",          self.call(apply_monthly_fees))
             ),

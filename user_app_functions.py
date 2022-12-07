@@ -67,7 +67,7 @@ def create_user(
 
 
 
-# not used yet
+
 def delete_customer(
     engine
 ):
@@ -76,7 +76,7 @@ def delete_customer(
     remove_customer(engine, ssn)
     print("\nCustomer deleted successfully.")
     
-# not used yet  
+
 def delete_employee(
     engine,
 ):
@@ -89,7 +89,7 @@ def delete_employee(
 
 
 
-# not used yet
+
 def create_customer(
     engine
 ):
@@ -118,7 +118,7 @@ def create_customer(
     insert_customer(engine, ssn, name, address, branch)
   
 
-# not used yet
+
 def create_employee(
     engine
 ):
