@@ -27,7 +27,7 @@ def insert_customer(
   # run queries as atomic unit
   with engine.connect() as atomic_connection:
     dbexe = DBExecuter(atomic_connection)
-    dbexe.query_to_value(f"""
+    dbexe.run_query(f"""
         INSERT INTO Customer (ssn, name, address, branch)
         VALUES ('{ssn}', '{name}', {address}, {branch})
     """)
@@ -78,19 +78,21 @@ def create_customer(
       # make a database executer for this atomic block of SQL queries
       dbexe = DBExecuter(atomic_connection)
       
-      ssn = getText("What is the Customers SSN? ");
-      name = getText("What is the Customers full name? ");
-      address = getText("What is the Customers address? ");
+      ssn = getText("What is the Customers SSN? ")
+      name = getText("What is the Customers full name? ")
+      address = getText("What is the Customers address? ")
 
-      pprint_df(dbexe.query_to_value(f"""
+      dbexe.run_query(f"""
         INSERT INTO Customer (ssn, name, address, branch)
         VALUES ('{ssn}', '{name}', '{address}', '{branch}')
-      """))
+      """)
+      dbexe.commit()
+      print("\Customer created successfully.")
         
 
 def delete_customer(
     engine,
-    ssn: str,
 ):
+    ssn = getText("What is the to be deleted Customers SSN? ")
     remove_customer(engine, ssn)
     print("\Customer deleted successfully.")

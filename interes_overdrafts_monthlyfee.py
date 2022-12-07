@@ -4,8 +4,13 @@ import config as config
 
 def apply_overdraft_fees(
   engine,
-  manager_branchID: UUID,
+  manager_ssn: str,
+  user_is_customer: bool = False,
 ) -> None:
+
+  if (user_is_customer):
+    return
+
   with engine.connect() as atomic_connection:
 
     dbexe = DBExecuter(atomic_connection)
@@ -14,6 +19,12 @@ def apply_overdraft_fees(
       SELECT * 
       FROM Holds
     """)
+
+    manager_branchID = dbexe.query_to_value(f"""
+        SELECT branch 
+        FROM Employee 
+        WHERE ssn = '{manager_ssn}'
+      """)
 
     for ssn, accountnumber in zip(accounts["ssn"], accounts["accountnumber"]):
 
@@ -44,10 +55,17 @@ def apply_overdraft_fees(
             WHERE accountnumber = '{accountnumber}'
           """)
 
+          print("Overdraft fees have been processed successfully!")
+
 def apply_interest_rates(
   engine,
-  manager_branchID: UUID,
+  manager_ssn: str,
+  user_is_customer: bool = False,
 ) -> None:
+
+  if (user_is_customer):
+    return
+
   with engine.connect() as atomic_connection:
 
     dbexe = DBExecuter(atomic_connection)
@@ -56,6 +74,12 @@ def apply_interest_rates(
       SELECT * 
       FROM Holds
     """)
+
+    manager_branchID = dbexe.query_to_value(f"""
+        SELECT branch 
+        FROM Employee 
+        WHERE ssn = '{manager_ssn}'
+      """)
 
     for ssn, accountnumber in zip(accounts["ssn"], accounts["accountnumber"]):
       customer_branchID = dbexe.query_to_value(f"""
@@ -76,10 +100,17 @@ def apply_interest_rates(
           WHERE accountnumber = '{accountnumber}'
         """)
 
+        print("Interested applied successfully!")
+
 def apply_monthly_fees(
   engine,
-  manager_branchID: UUID,
+  manager_ssn: str,
+  user_is_customer: bool = False,
 ) -> None:
+
+  if (user_is_customer):
+    return
+
   with engine.connect() as atomic_connection:
 
     dbexe = DBExecuter(atomic_connection)
@@ -88,6 +119,12 @@ def apply_monthly_fees(
       SELECT * 
       FROM Holds
     """)
+
+    manager_branchID = dbexe.query_to_value(f"""
+        SELECT branch 
+        FROM Employee 
+        WHERE ssn = '{manager_ssn}'
+      """)
 
     for ssn, accountnumber in zip(accounts["ssn"], accounts["accountnumber"]):
       customer_branchID = dbexe.query_to_value(f"""
