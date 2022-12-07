@@ -1,4 +1,4 @@
-# Setting up project
+# Setting up project | Group 20 Braeden Weaver, Kayla, Marelle
 
 ## Setting up docker
 1. `docker pull postgres`
@@ -27,3 +27,11 @@
 4. `python3 -m pip install pandas`
 5. `python3 -m pip install psycopg2`
 6. `python3 -m pip install numpy`
+
+## Modifying config.py
+```py
+database_name = 'Banking'
+database_username = 'postgres'
+database_password = 'password'
+```
+Please modify this file if you have change anything during setup!

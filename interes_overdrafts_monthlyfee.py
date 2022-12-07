@@ -55,6 +55,8 @@ def apply_overdraft_fees(
             WHERE accountnumber = '{accountnumber}'
           """)
 
+          print("Overdraft fees have been processed successfully!")
+
 def apply_interest_rates(
   engine,
   manager_ssn: str,
@@ -97,6 +99,8 @@ def apply_interest_rates(
           SET balance = {balance + (balance * interestRate)} 
           WHERE accountnumber = '{accountnumber}'
         """)
+
+        print("Interested applied successfully!")
 
 def apply_monthly_fees(
   engine,

@@ -30,8 +30,8 @@ from app_functions import (
     apply_overdraft_fees,
     apply_monthly_fees,
     
-    insert_analytics_name_1_here,
-    insert_analytics_name_2_here,
+    get_total_customers_analytics,
+    get_total_money_held_by_accounts,
     insert_analytics_name_3_here
 )
 
@@ -134,8 +134,8 @@ class BankApp:
         
         self.analytics_menu = Menu(
             "\nAnalytics:", (
-                ("1", self.call(insert_analytics_name_1_here)),
-                ("2", self.call(insert_analytics_name_2_here)),
+                ("Get total customers across all branches", self.call(get_total_customers_analytics)),
+                ("Get total amount of money held by accounts in all branches", self.call(get_total_money_held_by_accounts)),
                 ("3", self.call(insert_analytics_name_3_here))
             ),
             run_only_once=True
