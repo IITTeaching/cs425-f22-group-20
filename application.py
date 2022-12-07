@@ -16,6 +16,8 @@ from user_input import (
 )
 
 from app_functions import (
+    create_customer,
+    delete_customer,
     make_withdrawal,
     # make_deposit,
     make_transfer,
@@ -66,14 +68,7 @@ with engine.connect() as atomic_connection:
     
     dbexe.commit()
 
-
-
-
-
-
-
 class BankApp:
-    
     user_role: Role
     user_ssn: str
 
@@ -88,12 +83,10 @@ class BankApp:
     
     
     def login(self) -> None:
-        
         # reset menus
         self.setup()
         
         # get user login info
-        
         user_choice: int = getMultipleChoice(
             "\nWhat role are you signing in to?", (
                 "Customer",
@@ -117,22 +110,24 @@ class BankApp:
         
         self.transaction_menu = Menu(
             "\nAccount Transactions:", (
-                ("make withdrawal", self.call(make_withdrawal)),
-                ("make deposit",    self.call(make_deposit)),
-                ("make transfer",   self.call(make_transfer))
+                ("Make withdrawal", self.call(make_withdrawal)),
+                ("Make deposit",    self.call(make_deposit)),
+                ("Make transfer",   self.call(make_transfer))
             ),
             run_only_once=True
         )
         
         self.management_menu = Menu(
             "\nAccount Management:", (
-                ("create account",              self.call(create_account)),
-                ("delete account",              self.call(delete_account)),
-                ("view month statement",        self.call(view_month_statement)),
-                ("view pending transactions",   self.call(view_pending_transactions)),
-                ("add interest",                self.call(add_interest)),
-                ("apply overdraft fees",        self.call(apply_overdraft_fees)),
-                ("apply monthly fees",          self.call(apply_monthly_fees))
+                ("Create customer",             self.call(create_customer)),
+                ("Delete customer",             self.call(delete_customer)),
+                ("Create account",              self.call(create_account)),
+                ("Delete account",              self.call(delete_account)),
+                ("View month statement",        self.call(view_month_statement)),
+                ("View pending transactions",   self.call(view_pending_transactions)),
+                ("Add interest",                self.call(add_interest)),
+                ("Apply overdraft fees",        self.call(apply_overdraft_fees)),
+                ("Apply monthly fees",          self.call(apply_monthly_fees))
             ),
             run_only_once=True
         )
@@ -164,9 +159,11 @@ class BankApp:
                 "Analytics"
             )
             self.management_menu.remove_options(
-                "add interest", 
-                "apply overdraft fees",
-                "apply monthly fees"
+                "Add interest", 
+                "Apply overdraft fees",
+                "Apply monthly fees",
+                "Create customer",
+                "Delete customer"
             )
         elif (self.user_role == Role.Teller):
             self.main_menu.remove_options(
@@ -174,7 +171,7 @@ class BankApp:
                 "Analytics"
             )
             self.transaction_menu.remove_options(
-                "make transfer"
+                "Make transfer"
             )
             
     
