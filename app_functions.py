@@ -16,6 +16,10 @@ from interes_overdrafts_monthlyfee import (
     apply_monthly_fees as apply_monthly_fees_intern
 )
 
+from transfer import (
+    make_transfer as make_transfer_intern
+)
+
 
 """placeholders until real functions are all finished"""
 
@@ -43,7 +47,10 @@ def make_transfer(
     user_is_customer: bool
 ) -> None:
     
-    getMultipleChoice("You're transferring!", ("yes",))
+    choice = getMultipleChoice("Are you sure you'd like to initiate a transfer?", ("Yes", "No"))
+    if choice == 0:
+        make_transfer_intern(engine, customer_ssn, user_is_customer)
+    
     
 def create_account(
     engine,

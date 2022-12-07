@@ -104,7 +104,7 @@ def transfer(
     amount: Decimal,
     transaction_date: datetime.date,
     description: str
-) -> (UUID,UUID):
+) -> tuple[UUID, UUID]:
     """Deposits given amount from given account and 
     creates a 'deposit' Transaction. 
     Returns the new Transaction's transactionID."""
