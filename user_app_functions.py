@@ -68,15 +68,9 @@ def create_user(
 
 
 
-def delete_customer(
-    engine
-):
-    ssn = input("\nCustomer's ssn: ").strip()
     
-    remove_customer(engine, ssn)
-    print("\nCustomer deleted successfully.")
     
-
+# not used
 def delete_employee(
     engine,
 ):
@@ -87,38 +81,7 @@ def delete_employee(
     
 
 
-
-
-
-def create_customer(
-    engine
-):
-    print("\n~ Create a customer ~")
-
-    # let user choose a branch to create account for
-    branches: pd.DataFrame = all_branches(engine)
-
-    # show user the branches
-    pprint_df(branches)
-        
-    if (branches.empty):
-        print("No branches found! Please create one.")
-        return
-
-    branch_index = getMultipleChoice(
-        "\nChoose a branch: ", 
-        tuple(b for b in branches["address"])
-    )
-    branch = branches["branchid"][branch_index]
-    
-    ssn = getText("What is the Customers SSN? ");
-    name = getText("What is the Customers full name? ");
-    address = getText("What is the Customers address? ");
-        
-    insert_customer(engine, ssn, name, address, branch)
-  
-
-
+# not used
 def create_employee(
     engine
 ):

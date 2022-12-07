@@ -24,7 +24,7 @@ def apply_overdraft_fees(
         SELECT branch 
         FROM Employee 
         WHERE ssn = '{manager_ssn}'
-      """)
+    """)
 
     for ssn, accountnumber in zip(accounts["ssn"], accounts["accountnumber"]):
 
@@ -49,11 +49,11 @@ def apply_overdraft_fees(
           """)
 
           if balance < 0:
-            balance = dbexe.run_query(f"""
-            UPDATE Account 
-            SET balance = {balance - overdraftFee} 
-            WHERE accountnumber = '{accountnumber}'
-          """)
+            dbexe.run_query(f"""
+              UPDATE Account 
+              SET balance = {balance - overdraftFee} 
+              WHERE accountnumber = '{accountnumber}'
+            """)
 
           print("Overdraft fees have been processed successfully!")
 

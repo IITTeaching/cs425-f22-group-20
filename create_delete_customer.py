@@ -9,6 +9,7 @@ from pretty_printing import pprint_df
 from user_input import (
     getMultipleChoice,
     getText,
+    getYorN
 )
 
 from branch_query_functions import all_branches
@@ -22,7 +23,7 @@ def insert_customer(
     name: str,
     address: str,
     branch: UUID,
-) -> UUID:
+):
   """Creates a new customer of the given branch."""
   # run queries as atomic unit
   with engine.connect() as atomic_connection:
@@ -72,27 +73,24 @@ def create_customer(
     )
 
     branch = branches["branchid"][branch_index]
-        
-    with engine.connect() as atomic_connection:
-        
-      # make a database executer for this atomic block of SQL queries
-      dbexe = DBExecuter(atomic_connection)
       
-      ssn = getText("What is the Customers SSN? ")
-      name = getText("What is the Customers full name? ")
-      address = getText("What is the Customers address? ")
+    ssn = getText("\nWhat is the Customers SSN? ")
+    name = getText("\nWhat is the Customers full name? ")
+    address = getText("\nWhat is the Customers address? ")
 
-      dbexe.run_query(f"""
-        INSERT INTO Customer (ssn, name, address, branch)
-        VALUES ('{ssn}', '{name}', '{address}', '{branch}')
-      """)
-      dbexe.commit()
-      print("\Customer created successfully.")
+    insert_customer(engine, ssn, name, address)
+      
+    print("\nCustomer created successfully.")
         
+
+
 
 def delete_customer(
-    engine,
+    engine
 ):
-    ssn = getText("What is the to be deleted Customers SSN? ")
+    
+    ssn = input("\nCustomer's ssn: ").strip()
+    
     remove_customer(engine, ssn)
-    print("\Customer deleted successfully.")
+    print("\nCustomer deleted successfully.")
+    

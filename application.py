@@ -17,19 +17,19 @@ from user_input import (
 )
 
 from app_functions import (
-    create_customer,
-    delete_customer,
+    # create_customer,
+    # delete_customer,
     make_withdrawal,
     # make_deposit,
-    make_transfer,
+    # make_transfer,
     
     # create_account,
     # delete_account,
     view_month_statement,
     view_pending_transactions,
-    add_interest,
-    apply_overdraft_fees,
-    apply_monthly_fees,
+    # add_interest,
+    # apply_overdraft_fees,
+    # apply_monthly_fees,
     
     get_total_customers_analytics,
     get_total_money_held_by_accounts,
@@ -39,9 +39,26 @@ from app_functions import (
 from user_app_functions import (
     create_user
 )
+from deposit import (
+    make_deposit
+)
+from create_delete_account import (
+    create_account, 
+    delete_account
+)
+from create_delete_customer import (
+    create_customer,
+    delete_customer,
+)
+from interes_overdrafts_monthlyfee import (
+    apply_interest_rates as add_interest,
+    apply_overdraft_fees,
+    apply_monthly_fees
+)
 
-from deposit import make_deposit
-from create_delete_account import create_account, delete_account
+from transfer import (
+    make_transfer
+)
 
 # DATABASE CONNECTION STUFF
 
@@ -69,7 +86,11 @@ with engine.connect() as atomic_connection:
     
     dbexe.commit()
 
+
+
+
 class BankApp:
+    
     user_role: Role
     user_ssn: str
 
@@ -136,8 +157,8 @@ class BankApp:
         self.analytics_menu = Menu(
             "\nAnalytics:", (
                 ("Get total customers across all branches", self.call(get_total_customers_analytics)),
-                ("Get total amount of money held by accounts in all branches", self.call(get_total_money_held_by_accounts)),
-                ("3", self.call(insert_analytics_name_3_here))
+                ("Get total amount of money held by accounts in all branches", self.call(get_total_money_held_by_accounts))
+                # ("3", self.call(insert_analytics_name_3_here))
             ),
             run_only_once=True
         )
@@ -186,9 +207,10 @@ class BankApp:
             self.login()
             last_choice = self.main_menu.run()
             
-            if (last_choice == self.main_menu.get_option_index("Exit")):
+            if (last_choice == self.main_menu.get_option_index("Log out")):
                 print("\nLogged out successfully.")
             elif (last_choice == self.main_menu.get_option_index("Exit")):
+                print("\nExiting")
                 running = False
                 
         
