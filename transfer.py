@@ -1,57 +1,46 @@
-from typing import Tuple, Any
-
-import sqlalchemy as db
 from db_execution import DBExecuter
-from pretty_printing import pprint_df, pprint_relation
-import datetime 
+from pretty_printing import pprint_df
+import datetime
 from uuid import UUID
 import decimal
 from decimal import Decimal
-import config as config
-import app_functions as ap
 import pandas as pd
 
 from user_input import (
-    Menu,
     getMultipleChoice,
-    getChoice,
     getDate,
     getDecimal,
-    getInt,
     getUUID,
-    getYearMonth,
     getText,
     getYorN,
 
 )
 
-
 # set precision of decimal values
 decimal.getcontext().prec = 4
 
+# Actually computes the transaction and updates database
 def simple_access(
-    engine, 
-    transaction_type: str,
-    accountfrom: UUID,
-    accountto: UUID, 
-    amount: Decimal,
-    transaction_date: datetime.date,
-    description: str
+        engine,
+        transaction_type: str,
+        accountfrom: UUID,
+        accountto: UUID,
+        amount: Decimal,
+        transaction_date: datetime.date,
+        description: str
 ) -> tuple[UUID, UUID]:
-
-    """Adds given amount to given account and 
+    """Adds given amount to given account and
     creates a matching Transaction.
     Returns the new Transaction's transactionID."""
-    
+
     # account end balance
     end_balance: Decimal = Decimal()
-        
+
     # new transactionID
     transactionID = None
-        
+
     # run queries as an atomic unit
     with engine.connect() as atomic_connection:
-    
         # make a database executer for this atomic block of SQL queries
         dbexe = DBExecuter(atomic_connection)
 
@@ -75,57 +64,57 @@ def simple_access(
         end_balance_to = dbexe.query_to_value(f"""
             SELECT balance FROM Account WHERE accountNumber = '{accountto}'
         """)
-        
+
         # create transaction and add it to Transaction relation
         transactionIDFrom = dbexe.query_to_value(f"""
             INSERT INTO transaction (transactiontype, amount, transactiondate, 
-                description, accountfrom, accountto, startbalance)
+                description, accountfrom, accountto, endbalance)
             VALUES('{transaction_type}', '{amount}', '{transaction_date}', 
                 '{description}', '{accountfrom}', '{accountto}', '{end_balance_to}')
                 RETURNING transactionID
         """)
         transactionIDTo = dbexe.query_to_value(f"""
             INSERT INTO transaction (transactiontype, amount, transactiondate, 
-                description, accountfrom, accountto, startbalance)
+                description, accountfrom, accountto, endbalance)
             VALUES('{transaction_type}', '-{amount}', '{transaction_date}', 
                 '{description}', '{accountto}', '{accountfrom}', '{end_balance_from}')
                 RETURNING transactionID
         """)
-        
+
         dbexe.commit()
     return transactionIDFrom, transactionIDTo
 
 
 def transfer(
-    engine,
-    transfertype: str,
-    accountfrom: UUID,
-    accountto: UUID,
-    amount: Decimal,
-    transaction_date: datetime.date,
-    description: str
-) -> tuple[UUID, UUID]:
+        engine,
+        transfertype: str,
+        accountfrom: UUID,
+        accountto: UUID,
+        amount: Decimal,
+        transaction_date: datetime.date,
+        description: str
+) -> (UUID, UUID):
     """Deposits given amount from given account and 
     creates a 'deposit' Transaction. 
     Returns the new Transaction's transactionID."""
     # deposit by adding amount
     return simple_access(engine, transfertype, accountfrom, accountto, amount, transaction_date, description)
 
-
-def make_transfer (
-    engine,
-    customer_ssn: str,
-    user_is_customer: bool
+# Used more for the application side of things, stores data based on user input which is used to
+# Help Transfer money
+def make_transfer(
+        engine,
+        customer_ssn: str,
+        user_is_customer: bool
 ):
-
     print("\n~ Make a transfer ~")
-    
+
     # find all allowed accounts
     account_choices: pd.DataFrame = pd.DataFrame()
 
     if user_is_customer:
-        with engine.connect() as atomic_connection: # TRANSFER QUERY
-            
+        with engine.connect() as atomic_connection:  # TRANSFER QUERY
+
             # make a database executer for this atomic block of SQL queries
             dbexe = DBExecuter(atomic_connection)
 
@@ -134,12 +123,12 @@ def make_transfer (
                 FROM Account natural join Holds
                 WHERE ssn = '{customer_ssn}'
             """)
-    else: # user is a manager/teller, so find all accounts
+    else:  # user is a manager/teller, so find all accounts
         with engine.connect() as atomic_connection:
-            
+
             # make a database executer for this atomic block of SQL queries
             dbexe = DBExecuter(atomic_connection)
-            
+
             account_choices = dbexe.query_to_df(f"""
                 SELECT *
                 FROM Account
@@ -149,12 +138,12 @@ def make_transfer (
     if (account_choices.empty):
         print("\nNo accounts found to make a transfer.")
         return
-    
+
     # show user the account options
     pprint_df(account_choices)
-    
+
     account_from_index = getMultipleChoice(
-        "\nChoose an account to transfer from: ", 
+        "\nChoose an account to transfer from: ",
         tuple(a for a in account_choices["accountnumber"])
     )
 
@@ -188,14 +177,13 @@ def make_transfer (
         accountto = account_choices["accountnumber"][account_to_index]
 
     amount = getDecimal('Enter how much you want to transfer: $ ', 0)
-    
+
     transaction_date = datetime.date.today()
     if not user_is_customer:
         override_date = getYorN("\nDo you want to override today's date?")
-    
+
         if (override_date):
             transaction_date = getDate("\nEnter a date for this transaction: ")
-
 
     # get overdraft type from user
 
@@ -235,7 +223,7 @@ def make_transfer (
                 transactionType = 'transfer'
             else:
                 transactionType = 'external transfer'
-            
+
     # get description from user
     description = getText("\nWrite a description for this deposit.")
 
@@ -246,16 +234,16 @@ def make_transfer (
     )
 
     print("\nTransfer made successfully.")
-    
+
     transaction = pd.DataFrame()
-    
+
     with engine.connect() as atomic_connection:
-            
+
         # make a database executer for this atomic block of SQL queries
         dbexe = DBExecuter(atomic_connection)
         transaction = dbexe.query_to_df(f"""
                         SELECT transactionID, transactionType, amount, 
-                            transactionDate, description, accountTo, startBalance
+                            transactionDate, description, accountTo, endbalance
                         FROM Transaction
                         WHERE transactionID = '{transactionID[0]}'
                     """)
@@ -263,18 +251,8 @@ def make_transfer (
         if not user_is_customer:
             transaction2 = dbexe.query_to_df(f"""
                             SELECT transactionID, transactionType, amount, 
-                                transactionDate, description, accountTo, startBalance
+                                transactionDate, description, accountTo, endbalance
                             FROM Transaction
                             WHERE transactionID = '{transactionID[1]}'
                         """)
             pprint_df(transaction2)
-
-    
-
-       
-
-            
-
-            
-        
-
