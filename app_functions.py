@@ -1,4 +1,4 @@
-from analytics import get_total_customers, get_total_money
+from analytics import get_total_customers, get_total_money, get_total_salaries_of_employees
 from interes_overdrafts_monthlyfee import apply_interest_rates
 from user_input import getMultipleChoice
 
@@ -145,7 +145,7 @@ def get_total_customers_analytics(
     user_is_customer: bool = False, 
 ) -> None:
     # Get total customers that the manager has access to
-    print("There are currently {} customers across your managed branch.".format(get_total_customers(engine, manager_ssn, user_is_customer)))
+    get_total_customers(engine, manager_ssn, user_is_customer)
   
 def get_total_money_held_by_accounts(
     engine,
@@ -153,13 +153,13 @@ def get_total_money_held_by_accounts(
     user_is_customer: bool = False, 
 ) -> None:
     # Get total money of branches that the manager has access to
-    print("There is currently ${} held by accounts in your managed branch!".format(get_total_money(engine, manager_ssn, user_is_customer)))
+    get_total_money(engine, manager_ssn, user_is_customer)
   
-def insert_analytics_name_3_here(
+def get_total_employee_salary(
     engine,
     manager_ssn: str,
     user_is_customer: bool = False, 
 ) -> None:
-    
-    getMultipleChoice("You're viewing analytics 3!", ("yes",))
+    # Get total money of branches that the manager has access to
+    get_total_salaries_of_employees(engine, manager_ssn, user_is_customer)
     

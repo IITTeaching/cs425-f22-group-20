@@ -33,7 +33,7 @@ from app_functions import (
     
     get_total_customers_analytics,
     get_total_money_held_by_accounts,
-    insert_analytics_name_3_here
+    get_total_employee_salary
 )
 
 from user_app_functions import (
@@ -156,9 +156,9 @@ class BankApp:
         
         self.analytics_menu = Menu(
             "\nAnalytics:", (
-                ("Get total customers in your branch", self.call(get_total_customers_analytics)),
-                ("Get total amount of money held by accounts in your branche", self.call(get_total_money_held_by_accounts))
-                # ("3", self.call(insert_analytics_name_3_here))
+                ("Get total customers in your managed branch", self.call(get_total_customers_analytics)),
+                ("Get total amount of money held by accounts in your managed branch", self.call(get_total_money_held_by_accounts)),
+                ("Get total employees salary of Employees in your managed branch", self.call(get_total_employee_salary))
             ),
             run_only_once=True
         )

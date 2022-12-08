@@ -59,6 +59,28 @@ def get_total_money(
           """)
 
       return total_money
+
+def get_total_employee_salary_(
+  engine,
+  manager_ssn: str,
+  user_is_customer: bool = False, 
+) -> Decimal:
+  # This function gets the total amount of $ in a managers branch
+
+  # sanity check
+  if user_is_customer:
+    return
+
+  with engine.connect() as atomic_connection:
+      dbexe = DBExecuter(atomic_connection)
+
+      branchID = dbexe.query_to_value(f"""
+        SELECT branch FROM Employee WHERE ssn = '{manager_ssn}'
+      """)
+
+      return dbexe.query_to_value(f"""
+        SELECT SUM(salary) FROM Employee WHERE branch = '{branchID}'
+      """)
     
 def get_total_customers_analytics(
     engine,
@@ -66,7 +88,7 @@ def get_total_customers_analytics(
     user_is_customer: bool = False, 
 ) -> None:
     
-    print("There are currently {} customers across all branches!".format(get_total_customers(engine)))
+    print("There are currently {} customers across your managed branch.".format(get_total_customers(engine)))
   
 def get_total_money_held_by_accounts(
     engine,
@@ -74,4 +96,12 @@ def get_total_money_held_by_accounts(
     user_is_customer: bool = False, 
 ) -> None:
   
-    print("There is currently ${} held by accounts in all branches!".format(get_total_money(engine)))
+    print("There is currently ${} held by accounts in your managed branch.".format(get_total_money(engine)))
+
+def get_total_salaries_of_employees(
+    engine,
+    manager_ssn: str,
+    user_is_customer: bool = False, 
+) -> None:
+
+    print("There is currently ${} being paid to each employee of your managed branch.".format(get_total_employee_salary_(engine, manager_ssn, user_is_customer)))
