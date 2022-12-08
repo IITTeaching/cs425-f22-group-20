@@ -25,8 +25,8 @@ from app_functions import (
     
     # create_account,
     # delete_account,
-    view_month_statement,
-    view_pending_transactions,
+    #view_month_statement,
+    #view_pending_transactions,
     # add_interest,
     # apply_overdraft_fees,
     # apply_monthly_fees,
@@ -42,6 +42,9 @@ from user_app_functions import (
 from deposit import (
     make_deposit
 )
+from transfer import (
+    make_transfer
+)
 from create_delete_account import (
     create_account, 
     delete_account
@@ -50,14 +53,16 @@ from create_delete_customer import (
     create_customer,
     delete_customer,
 )
+from statement import (
+    view_month_statement
+)
+from pendingtransactions import (
+    view_pending_transactions
+)
 from interes_overdrafts_monthlyfee import (
     apply_interest_rates as add_interest,
     apply_overdraft_fees,
     apply_monthly_fees
-)
-
-from transfer import (
-    make_transfer
 )
 
 # DATABASE CONNECTION STUFF
