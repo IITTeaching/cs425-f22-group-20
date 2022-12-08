@@ -33,7 +33,9 @@ from app_functions import (
     
     get_total_customers_analytics,
     get_total_money_held_by_accounts,
-    get_total_employee_salary
+    get_total_employee_salary,
+    view_month_statement as view_month_statement_intern,
+    view_pending_transactions as view_pending_transactions_intern
 )
 
 from user_app_functions import (
@@ -46,12 +48,6 @@ from transfer import (
     make_transfer
 )
 
-from statement import (
-    view_month_statement
-)
-from pendingtransactions import (
-    view_pending_transactions
-)
 from interes_overdrafts_monthlyfee import (
     apply_interest_rates as add_interest,
     apply_overdraft_fees,
@@ -143,8 +139,8 @@ class BankApp:
                 ("Delete customer",             self.call(delete_customer_intern)),
                 ("Create account",              self.call(create_account_intern)),
                 ("Delete account",              self.call(delete_account_intern)),
-                ("View month statement",        self.call(view_month_statement)),
-                ("View pending transactions",   self.call(view_pending_transactions)),
+                ("View month statement",        self.call(view_month_statement_intern)),
+                ("View pending transactions",   self.call(view_pending_transactions_intern)),
                 ("Add interest",                self.call(add_interest)),
                 ("Apply overdraft fees",        self.call(apply_overdraft_fees)),
                 ("Apply monthly fees",          self.call(apply_monthly_fees))

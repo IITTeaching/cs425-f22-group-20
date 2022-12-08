@@ -1,4 +1,5 @@
 from analytics import get_total_customers, get_total_money, get_total_salaries_of_employees
+from deposit import deposit
 from interes_overdrafts_monthlyfee import apply_interest_rates
 from user_input import getMultipleChoice
 
@@ -20,6 +21,10 @@ from transfer import (
     make_transfer as make_transfer_intern
 )
 
+from pendingtransactions import (
+    view_pending_transactions as view_pending_transactions_intern
+)
+
 
 """placeholders until real functions are all finished"""
 
@@ -39,7 +44,7 @@ def make_deposit(
     user_is_customer: bool
 ) -> None:
     
-    getMultipleChoice("You're depositing!", ("yes",))
+    deposit(engine, customer_ssn, user_is_customer)
     
 def make_transfer(
     engine,
@@ -99,15 +104,17 @@ def view_month_statement(
     user_is_customer: bool
 ) -> None:
     
-    getMultipleChoice("You're viewing a month statement!", ("yes",))
+    view_month_statement(engine, customer_ssn, user_is_customer)
+
     
 def view_pending_transactions(
     engine,
     customer_ssn: str,
     user_is_customer: bool
 ) -> None:
+
+    view_pending_transactions_intern(engine, customer_ssn, user_is_customer)
     
-    getMultipleChoice("You're viewing pending transactions!", ("yes",))
     
 def add_interest(
     engine,
