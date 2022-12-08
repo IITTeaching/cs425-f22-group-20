@@ -9,6 +9,7 @@ def apply_overdraft_fees(
 ) -> None:
 
   if (user_is_customer):
+    print("Customers cannot do this feature.")
     return
 
   with engine.connect() as atomic_connection:
@@ -64,6 +65,7 @@ def apply_interest_rates(
 ) -> None:
 
   if (user_is_customer):
+    print("Customers cannot do this feature.")
     return
 
   with engine.connect() as atomic_connection:
@@ -109,6 +111,7 @@ def apply_monthly_fees(
 ) -> None:
 
   if (user_is_customer):
+    print("Customers cannot do this feature.")
     return
 
   with engine.connect() as atomic_connection:

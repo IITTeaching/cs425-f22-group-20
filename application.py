@@ -16,42 +16,45 @@ from user_input import (
     getMultipleChoice
 )
 
-from app_functions import (
-    create_customer as create_customer_intern,
-    delete_customer as delete_customer_intern,
-    make_withdrawal,
-    # make_deposit,
-    # make_transfer,
-    
-    create_account as create_account_intern,
-    delete_account as delete_account_intern,
-    #view_month_statement,
-    #view_pending_transactions,
-    add_interest,
-    apply_overdraft_fees,
-    apply_monthly_fees,
-    
-    get_total_customers_analytics,
-    get_total_money_held_by_accounts,
-    get_total_employee_salary,
-    view_month_statement as view_month_statement_intern,
-    view_pending_transactions as view_pending_transactions_intern
-)
-
 from user_app_functions import (
     create_user
 )
 from deposit import (
     make_deposit
 )
+from withdraw import (
+    make_withdrawal
+)
 from transfer import (
     make_transfer
+)
+
+from create_delete_customer import (
+    create_customer,
+    delete_customer
+)
+from create_delete_account import (
+    create_account,
+    delete_account
+)
+
+from statement import (
+    view_month_statement
+)
+
+from pendingtransactions import (
+    view_pending_transactions
 )
 
 from interes_overdrafts_monthlyfee import (
     apply_interest_rates as add_interest,
     apply_overdraft_fees,
     apply_monthly_fees
+)
+from analytics import (
+    view_total_customers,
+    view_total_money_held_by_accounts,
+    view_total_salaries_of_employees
 )
 
 # DATABASE CONNECTION STUFF
@@ -64,21 +67,22 @@ engine = db.create_engine(
 metadata = db.MetaData()
 
 
-# INIT TABLES and SAMPLE DATA
+# just for testing
+# # INIT TABLES and SAMPLE DATA
 
-with engine.connect() as atomic_connection:
+# with engine.connect() as atomic_connection:
     
-    # make a database executer for this atomic block of SQL queries
-    dbexe = DBExecuter(atomic_connection)
+#     # make a database executer for this atomic block of SQL queries
+#     dbexe = DBExecuter(atomic_connection)
     
     
-    with open("reset_all_ddl.sql") as ddl_file:
-        dbexe.run_query(ddl_file.read())
+#     with open("reset_all_ddl.sql") as ddl_file:
+#         dbexe.run_query(ddl_file.read())
 
-    with open("insertion.sql") as insertion_file:
-        dbexe.run_query(insertion_file.read())
+#     with open("insertion.sql") as insertion_file:
+#         dbexe.run_query(insertion_file.read())
     
-    dbexe.commit()
+#     dbexe.commit()
 
 
 
@@ -135,12 +139,12 @@ class BankApp:
         
         self.management_menu = Menu(
             "\nAccount Management:", (
-                ("Create customer",             self.call(create_customer_intern)),
-                ("Delete customer",             self.call(delete_customer_intern)),
-                ("Create account",              self.call(create_account_intern)),
-                ("Delete account",              self.call(delete_account_intern)),
-                ("View month statement",        self.call(view_month_statement_intern)),
-                ("View pending transactions",   self.call(view_pending_transactions_intern)),
+                ("Create customer",             self.call(create_customer)),
+                ("Delete customer",             self.call(delete_customer)),
+                ("Create account",              self.call(create_account)),
+                ("Delete account",              self.call(delete_account)),
+                ("View month statement",        self.call(view_month_statement)),
+                ("View pending transactions",   self.call(view_pending_transactions)),
                 ("Add interest",                self.call(add_interest)),
                 ("Apply overdraft fees",        self.call(apply_overdraft_fees)),
                 ("Apply monthly fees",          self.call(apply_monthly_fees))
@@ -150,9 +154,9 @@ class BankApp:
         
         self.analytics_menu = Menu(
             "\nAnalytics:", (
-                ("Get total customers in your managed branch", self.call(get_total_customers_analytics)),
-                ("Get total amount of money held by accounts in your managed branch", self.call(get_total_money_held_by_accounts)),
-                ("Get total employees salary of in your managed branch", self.call(get_total_employee_salary))
+                ("View total customers in your managed branch", self.call(view_total_customers)),
+                ("View total amount of money held by accounts in your managed branch", self.call(view_total_money_held_by_accounts)),
+                ("View total employee salary in your managed branch", self.call(view_total_salaries_of_employees))
             ),
             run_only_once=True
         )

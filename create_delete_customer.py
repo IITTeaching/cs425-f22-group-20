@@ -52,8 +52,13 @@ def remove_customer(
         
         dbexe.commit()
 
+
+
+
 def create_customer(
-    engine
+    engine,
+    _: str,
+    __: bool
 ):
     print("\n~ Create a customer ~")
 
@@ -78,15 +83,14 @@ def create_customer(
     name = getText("\nWhat is the Customers full name? ")
     address = getText("\nWhat is the Customers address? ")
 
-    insert_customer(engine, ssn, name, address)
+    insert_customer(engine, ssn, name, address, branch)
       
     print("\nCustomer created successfully.")
         
-
-
-
 def delete_customer(
-    engine
+    engine,
+    _: str,
+    __: bool
 ):
     
     ssn = input("\nCustomer's ssn: ").strip()

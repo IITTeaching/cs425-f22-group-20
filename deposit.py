@@ -71,7 +71,7 @@ def simple_access(
             INSERT INTO Transaction (transactionType, amount, transactionDate, 
                     description, accountTo, endBalance)
             VALUES ('{transaction_type}', {str(amount)}, '{transaction_date}', 
-                    '{description}', '{accountnumber}', {str(start_balance)})
+                    '{description}', '{accountnumber}', {str(start_balance + amount)})
             RETURNING transactionID
         """)
         

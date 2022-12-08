@@ -66,7 +66,7 @@ def view_month_statement(
         stmtTime = getYearMonth('Which month do you want to view your statement on?')
         stmtYear = stmtTime[0]
         stmtMonth = stmtTime[1]
-        currentValue: any
+        currentValue = None
         monthString = cal.month_name[stmtMonth]
         transactions = dbexe.query_to_df(f"""
         SELECT * 
