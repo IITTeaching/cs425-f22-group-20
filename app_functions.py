@@ -24,6 +24,11 @@ from transfer import (
 from pendingtransactions import (
     view_pending_transactions as view_pending_transactions_intern
 )
+
+from statement import (
+    view_month_statement as view_month_statement_intern
+)
+
 from withdraw import withdraw
 
 
@@ -105,7 +110,7 @@ def view_month_statement(
     user_is_customer: bool
 ) -> None:
     
-    view_month_statement(engine, customer_ssn, user_is_customer)
+    view_month_statement_intern(engine, customer_ssn, user_is_customer)
 
     
 def view_pending_transactions(
