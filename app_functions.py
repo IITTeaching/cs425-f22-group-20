@@ -24,6 +24,7 @@ from transfer import (
 from pendingtransactions import (
     view_pending_transactions as view_pending_transactions_intern
 )
+from withdraw import withdraw
 
 
 """placeholders until real functions are all finished"""
@@ -36,7 +37,7 @@ def make_withdrawal(
     user_is_customer: bool
 ) -> None:
     
-    getMultipleChoice("You're withdrawing!", ("yes",))
+    withdraw(engine, customer_ssn, user_is_customer)
 
 def make_deposit(
     engine,

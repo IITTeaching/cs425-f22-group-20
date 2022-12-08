@@ -69,7 +69,7 @@ def simple_access(
         # create transaction and add it to Transaction relation
         transactionID = dbexe.query_to_value(f"""
             INSERT INTO Transaction (transactionType, amount, transactionDate, 
-                    description, accountTo, startBalance)
+                    description, accountTo, endBalance)
             VALUES ('{transaction_type}', {str(amount)}, '{transaction_date}', 
                     '{description}', '{accountnumber}', {str(start_balance)})
             RETURNING transactionID
@@ -177,7 +177,7 @@ def make_deposit(
         
         transaction = dbexe.query_to_df(f"""
             SELECT transactionID, transactionType, amount, 
-                transactionDate, description, accountTo, startBalance
+                transactionDate, description, accountTo, endBalance
             FROM Transaction
             WHERE transactionID = '{transactionID}'
         """)
