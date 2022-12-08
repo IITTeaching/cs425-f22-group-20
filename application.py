@@ -156,8 +156,8 @@ class BankApp:
         
         self.analytics_menu = Menu(
             "\nAnalytics:", (
-                ("Get total customers across all branches", self.call(get_total_customers_analytics)),
-                ("Get total amount of money held by accounts in all branches", self.call(get_total_money_held_by_accounts))
+                ("Get total customers in your branch", self.call(get_total_customers_analytics)),
+                ("Get total amount of money held by accounts in your branche", self.call(get_total_money_held_by_accounts))
                 # ("3", self.call(insert_analytics_name_3_here))
             ),
             run_only_once=True

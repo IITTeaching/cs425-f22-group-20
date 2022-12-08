@@ -1,31 +1,64 @@
 from decimal import Decimal
 from db_execution import DBExecuter
-from uuid import UUID
 import config as config
 
 def get_total_customers(
-  engine
+  engine,
+  manager_ssn: str,
+  user_is_customer: bool = False, 
 ) -> Decimal:
+  # This function gets the total amount of customers in a manager branch
 
-    with engine.connect() as atomic_connection:
+  if user_is_customer:
+    return
 
-        dbexe = DBExecuter(atomic_connection)
+  with engine.connect() as atomic_connection:
+      dbexe = DBExecuter(atomic_connection)
 
-        return dbexe.query_to_value(f"""
-          SELECT COUNT(*) FROM Customer
-        """)
+      branchID = dbexe.query_to_value(f"""
+        SELECT branch FROM Employee WHERE ssn = '{manager_ssn}'
+      """)
+
+      return dbexe.query_to_value(f"""
+        SELECT COUNT(*) FROM Customer WHERE branch = '{branchID}'
+      """)
 
 def get_total_money(
   engine,
+  manager_ssn: str,
+  user_is_customer: bool = False, 
 ) -> Decimal:
+  # This function gets the total amount of $ in a managers branch
 
-    with engine.connect() as atomic_connection:
+  # sanity check
+  if user_is_customer:
+    return
 
-        dbexe = DBExecuter(atomic_connection)
+  with engine.connect() as atomic_connection:
+      dbexe = DBExecuter(atomic_connection)
 
-        return dbexe.query_to_value(f"""
-          SELECT SUM(balance) FROM Account
+      accounts = dbexe.query_to_df(f"""
+        SELECT * 
+        FROM Holds
+      """)
+
+      total_money = 0
+
+      for ssn, accountnumber in zip(accounts["ssn"], accounts["accountnumber"]):
+        branchID = dbexe.query_to_value(f"""
+          SELECT branch FROM Employee WHERE ssn = '{manager_ssn}'
         """)
+        
+        customerBranchID = dbexe.query_to_value(f"""
+          SELECT branch FROM Customer WHERE ssn = '{ssn}'
+        """)
+
+        if branchID == customerBranchID:
+          total_money = total_money + dbexe.query_to_value(f"""
+            SELECT balance FROM Account WHERE accountNumber = '{accountnumber}'
+          """)
+
+      return total_money
     
 def get_total_customers_analytics(
     engine,
