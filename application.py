@@ -158,7 +158,7 @@ class BankApp:
             "\nAnalytics:", (
                 ("Get total customers in your managed branch", self.call(get_total_customers_analytics)),
                 ("Get total amount of money held by accounts in your managed branch", self.call(get_total_money_held_by_accounts)),
-                ("Get total employees salary of Employees in your managed branch", self.call(get_total_employee_salary))
+                ("Get total employees salary of in your managed branch", self.call(get_total_employee_salary))
             ),
             run_only_once=True
         )
