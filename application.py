@@ -17,19 +17,19 @@ from user_input import (
 )
 
 from app_functions import (
-    # create_customer,
-    # delete_customer,
+    create_customer as create_customer_intern,
+    delete_customer as delete_customer_intern,
     make_withdrawal,
     # make_deposit,
     # make_transfer,
     
-    # create_account,
-    # delete_account,
+    create_account as create_account_intern,
+    delete_account as delete_account_intern,
     #view_month_statement,
     #view_pending_transactions,
-    # add_interest,
-    # apply_overdraft_fees,
-    # apply_monthly_fees,
+    add_interest,
+    apply_overdraft_fees,
+    apply_monthly_fees,
     
     get_total_customers_analytics,
     get_total_money_held_by_accounts,
@@ -45,14 +45,7 @@ from deposit import (
 from transfer import (
     make_transfer
 )
-from create_delete_account import (
-    create_account, 
-    delete_account
-)
-from create_delete_customer import (
-    create_customer,
-    delete_customer,
-)
+
 from statement import (
     view_month_statement
 )
@@ -146,10 +139,10 @@ class BankApp:
         
         self.management_menu = Menu(
             "\nAccount Management:", (
-                ("Create customer",             self.call(create_customer)),
-                ("Delete customer",             self.call(delete_customer)),
-                ("Create account",              self.call(create_account)),
-                ("Delete account",              self.call(delete_account)),
+                ("Create customer",             self.call(create_customer_intern)),
+                ("Delete customer",             self.call(delete_customer_intern)),
+                ("Create account",              self.call(create_account_intern)),
+                ("Delete account",              self.call(delete_account_intern)),
                 ("View month statement",        self.call(view_month_statement)),
                 ("View pending transactions",   self.call(view_pending_transactions)),
                 ("Add interest",                self.call(add_interest)),
